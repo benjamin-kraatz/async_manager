@@ -1,12 +1,11 @@
-library async_manager;
-
 import 'package:async_manager/anchor.dart';
 import 'package:async_manager/async_manager.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
 typedef AsyncManagerBuilder = Widget Function(OperationInfo info);
-typedef AsyncManagerNotificationBuilder = Widget Function(bool containsAchor);
+typedef AsyncManagerNotificationBuilder = Widget Function(
+    bool containsAchor, OperationInfo operationInfo);
 
 class AsyncManagerKey {
   final String key;
@@ -14,13 +13,14 @@ class AsyncManagerKey {
   AsyncManagerKey(this.key);
 }
 
-/// Use this widget to build a widget tree based on
-/// all pending and executing AsyncManagers
+/// Use this widget to define an AsyncManager
+/// and build a widget tree based on the current
+/// state of operations run inside that manager.
 class AsyncManagerWidget extends StatefulWidget {
   final AsyncManagerBuilder builder;
-  final AsyncManager operation;
+  final AsyncManager manager;
 
-  AsyncManagerWidget({@required this.operation, @required this.builder});
+  AsyncManagerWidget({@required this.manager, @required this.builder});
 
   @override
   _AsyncManagerWidgetState createState() => _AsyncManagerWidgetState();
@@ -29,17 +29,17 @@ class AsyncManagerWidget extends StatefulWidget {
 class _AsyncManagerWidgetState extends State<AsyncManagerWidget> {
   @override
   Widget build(BuildContext context) {
-    return widget.builder(widget.operation.operationInfo);
+    return widget.builder(widget.manager.operationInfo);
   }
 
   @override
   void initState() {
     super.initState();
 
-    widget.operation.markAsInternal(true);
+    widget.manager.markAsInternal(true);
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      widget.operation.runOperation();
+      widget.manager.runOperation();
       AsyncManager.registerAnchor(Anchor(
           operationActionNotifier: (opac) {
             if (!mounted) return;
@@ -72,13 +72,12 @@ class _AsyncManagerWidgetState extends State<AsyncManagerWidget> {
 ///
 /// The [child]'s builder has a boolean param, true if
 /// any operation belongs to this widget, false
-/// otherwise.
+/// otherwise. Also it has the current operationInfo
 class AsyncNotificationWidget extends StatefulWidget {
   final AsyncManagerNotificationBuilder child;
-  final Widget sender;
   final AsyncManagerKey hookKey;
 
-  AsyncNotificationWidget({this.child, this.sender, this.hookKey});
+  AsyncNotificationWidget({this.child, this.hookKey});
 
   @override
   _AsyncNotificationWidgetState createState() =>
@@ -87,12 +86,13 @@ class AsyncNotificationWidget extends StatefulWidget {
 
 class _AsyncNotificationWidgetState extends State<AsyncNotificationWidget> {
   bool contains = false;
+  OperationInfo _opInfo;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        widget.child(contains),
+        widget.child(contains, _opInfo),
       ],
     );
   }
@@ -110,10 +110,12 @@ class _AsyncNotificationWidgetState extends State<AsyncNotificationWidget> {
               if (operation.hookKey != null) {
                 if (operation.hookKey.key == widget.hookKey.key) {
                   contains = state;
+                  _opInfo = operation.operationInfo;
                   return;
                 }
               }
             }
+            _opInfo = null;
             contains = false;
           }
         },
