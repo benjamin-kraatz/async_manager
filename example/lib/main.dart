@@ -8,8 +8,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
@@ -20,11 +18,40 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('AsyncManager sample app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            children: <Widget>[
+              Text('Here you can see if any operation is running, and which'),
+              SizedBox(
+                height: 12,
+              ),
+            ]..addAll([]),
+          ),
         ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (c) => SettingsPage()));
+            }),
+      ),
+    );
+  }
+}
+
+class SettingsPage extends StatefulWidget {
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Settings'),
       ),
     );
   }
