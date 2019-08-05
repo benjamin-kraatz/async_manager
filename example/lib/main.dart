@@ -14,6 +14,23 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: HomeScreenPage());
+  }
+}
+
+class HomeScreenPage extends StatefulWidget {
+  @override
+  _HomeScreenPageState createState() => _HomeScreenPageState();
+}
+
+class _HomeScreenPageState extends State<HomeScreenPage> {
+  @override
+  void initState() {
+    super.initState();
 
     _anchorToAsyncManager();
   }
@@ -32,29 +49,27 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('AsyncManager sample app'),
-        ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Text(
-                  'Here you can see if any operation is running, and information about'),
-              SizedBox(
-                height: 12,
-              ),
-            ]..addAll([_buildNotificationWidget(SettingsPage.HookKey)]),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.settings),
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (c) => SettingsPage()));
-            }),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('AsyncManager sample app'),
       ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            Text(
+                'Here you can see if any operation is running, and information about'),
+            SizedBox(
+              height: 12,
+            ),
+          ]..addAll([_buildNotificationWidget(SettingsPage.HookKey)]),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (c) => SettingsPage()));
+          }),
     );
   }
 
@@ -132,21 +147,22 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       );
       return Future.delayed(Duration(seconds: 2)).then((_) {
-        //ad is now available, fire action to let the user watch the ad IF NOT ON SETTINGS SCREEN.
-        aman.notifyOperationAction(OperationAction(
-            description: 'The ad was loaded. You can now watch the ad.',
-            operation: (aman) async {
-              //Display the ad...
-              _showAdDummy();
-            }));
-
-        //also, inform the user that the ad was loaded.
+        //inform the user that the ad was loaded.
         aman.notifyOperationInfo(
           OperationInfo(
             title: 'Ad is available',
             description: 'You can watch the ad now.',
           ),
         );
+
+        //fire action to let the user watch the ad IF NOT ON SETTINGS SCREEN.
+        aman.notifyOperationAction(OperationAction(
+            description: 'The ad was loaded. You can now watch the ad.',
+            operation: (aman) async {
+              //Display the ad...
+              _showAdDummy();
+              return OperationInfo();
+            }));
 
         return OperationInfo();
       });

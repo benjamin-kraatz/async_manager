@@ -103,23 +103,35 @@ class _AsyncNotificationWidgetState extends State<AsyncNotificationWidget> {
 
     AsyncManager.registerAnchor(Anchor(callback: (state) {
       if (!mounted) return;
-      setState(
-        () {
-          if (AsyncManager.instances != null) {
-            for (AsyncManager operation in AsyncManager.instances.values) {
-              if (operation.hookKey != null) {
-                if (operation.hookKey.key == widget.hookKey.key) {
-                  contains = state;
-                  _opInfo = operation.operationInfo;
-                  return;
-                }
-              }
-            }
-            _opInfo = null;
-            contains = false;
-          }
-        },
-      );
+      setState(() {
+        _inform(state);
+      });
+    }, callbackInstancesActive: (state, count) {
+      _inform(state);
+    }, operationActionNotifier: (opaction) {
+      setState(() {
+        _inform(true);
+      });
+    }, operationNotifier: (opinfo) {
+      setState(() {
+        _inform(true);
+      });
     }));
+  }
+
+  void _inform(bool state) {
+    if (AsyncManager.instances != null) {
+      for (AsyncManager operation in AsyncManager.instances.values) {
+        if (operation.hookKey != null) {
+          if (operation.hookKey.key == widget.hookKey.key) {
+            contains = state;
+            _opInfo = operation.operationInfo;
+            return;
+          }
+        }
+      }
+      _opInfo = null;
+      contains = false;
+    }
   }
 }
