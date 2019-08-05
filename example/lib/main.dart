@@ -56,8 +56,11 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Text(
-                'Here you can see if any operation is running, and information about'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                  'Here you can see if any operation is running, and information about'),
+            ),
             SizedBox(
               height: 12,
             ),
@@ -76,7 +79,7 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
   Widget _buildNotificationWidget(String key) {
     return AsyncNotificationWidget(
       hookKey: AsyncManagerKey(key),
-      child: (state, info) {
+      child: (state, info, manager) {
         return state
             ? Column(
                 children: <Widget>[
@@ -85,7 +88,21 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
                     info.description,
                     style: TextStyle(fontSize: 12.0, color: Colors.grey),
                   ),
-                ],
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                ]..addAll([
+                    if (manager.operationActions != null &&
+                        manager.operationActions.length > 0)
+                      for (OperationAction a in manager.operationActions)
+                        RaisedButton(
+                          shape: RoundedRectangleBorder(),
+                          child: Text('Need your patience!'),
+                          onPressed: () {
+                            a.showOperationAction();
+                          },
+                        )
+                  ]),
               )
             : Container();
       },
@@ -101,6 +118,15 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  bool isOnScreen = true;
+
+  @override
+  void dispose() {
+    isOnScreen = false;
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,10 +142,61 @@ class _SettingsPageState extends State<SettingsPage> {
               subtitle: Text(
                   'Watch a video and remove all ads until you restart the app.'),
               onTap: _createAsyncManagerAdRemove,
-            )
+            ),
+            AsyncManagerWidget(
+                manager: _createAsyncManagerRefreshData(),
+                instantLoad: false,
+                builder: (amw, operationInfo, manager) {
+                  return ListTile(
+                    title: Text(operationInfo.title),
+                    subtitle: Text(operationInfo.description),
+                    onTap: () {
+                      amw.runOperation();
+                    },
+                    trailing: operationInfo.state == OperationState.Started
+                        ? CircularProgressIndicator()
+                        : null,
+                  );
+                }),
           ],
         ),
       ),
+    );
+  }
+
+  AsyncManager _createAsyncManagerRefreshData() {
+    return AsyncManager(
+      operation: (aman) {
+        return Future.delayed(Duration(seconds: 2)).then((_) {
+          aman.notifyOperationInfo(
+            OperationInfo(
+              title: 'Only a few bytes',
+              description: 'We are not done yet.',
+            ),
+          );
+          return Future.delayed(Duration(seconds: 3)).then((_) {
+            aman.notifyOperationInfo(
+              OperationInfo(
+                title: 'Just a few seconds.',
+                description: 'The data is processed by us.',
+              ),
+            );
+
+            return Future.delayed(Duration(seconds: 4)).then((_) {
+              aman.notifyOperationInfo(
+                OperationInfo(
+                  title: 'Here is your data',
+                  description: 'Here is your new dummy data.',
+                ),
+              );
+              return OperationInfo();
+            });
+          });
+        });
+      },
+      operationInfo: OperationInfo(
+          title: "Dummy data",
+          description: 'This is dummy data (click to refresh internally)'),
     );
   }
 
@@ -156,13 +233,27 @@ class _SettingsPageState extends State<SettingsPage> {
         );
 
         //fire action to let the user watch the ad IF NOT ON SETTINGS SCREEN.
-        aman.notifyOperationAction(OperationAction(
+        //but if on screen and the ads are displayed, the operation will automatically
+        //be hidden from all anchors.
+        //first, check if on screen to not display the action.
+        if (isOnScreen) {
+          return OperationInfo();
+        }
+        aman.notifyOperationAction(
+          OperationAction(
             description: 'The ad was loaded. You can now watch the ad.',
-            operation: (aman) async {
-              //Display the ad...
-              _showAdDummy();
+            asyncManager: aman,
+            operation: (_) async {
+              //the user interacted with an operation action.
+              //here, you can display a dialog or snackbar.
+              await Future.doWhile(() {
+                //this is just a dummy future
+                return false;
+              });
               return OperationInfo();
-            }));
+            },
+          ),
+        );
 
         return OperationInfo();
       });
@@ -170,6 +261,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _showAdDummy() {
-    print("Ad is now being displayed.");
+    print("Ad is now being displayed ");
   }
 }

@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 
 import 'anchor.dart';
 
-enum OperationState { Done, Error, Unknown }
+enum OperationState { Started, Done, Error, Unknown }
 
 class OperationStateInfo {
   final OperationState opState;
@@ -24,6 +24,7 @@ typedef OperationNotifier = void Function(OperationInfo info);
 /// up in the [AsyncManager]
 class OperationInfo {
   final String title, description;
+  OperationState state;
 
   OperationInfo({this.title, this.description});
 }
@@ -161,6 +162,7 @@ class AsyncManager {
     //if (operationNotifier != null) operationNotifier(newInfo);
 
     operationInfo = newInfo;
+    operationInfo.state = OperationState.Started;
     print('AsyncManager: set new operationInfo: ${operationInfo.description}');
 
     _notifyAnchors(newInfo);
@@ -177,6 +179,7 @@ class AsyncManager {
 
   void _runOperation() {
     _informAnchors(true);
+    operationInfo.state = OperationState.Started;
     operation(this).then((c) {
       _operationDone();
     }).catchError((err) {
@@ -197,6 +200,8 @@ class AsyncManager {
       print("ASYNCOP: There's another operationaction!");
       return;
     }
+
+    operationInfo.state = OperationState.Done;
     _removeInstance();
     _informAnchors(false);
     if (!_completer.isCompleted)
@@ -207,6 +212,7 @@ class AsyncManager {
 
   void _operationError({bool complete = true}) {
     if (complete) {
+      operationInfo.state = OperationState.Error;
       _removeInstance();
       _informAnchors(false);
       if (!_completer.isCompleted)

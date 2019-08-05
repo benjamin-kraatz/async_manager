@@ -3,9 +3,10 @@ import 'package:async_manager/async_manager.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
-typedef AsyncManagerBuilder = Widget Function(OperationInfo info);
+typedef AsyncManagerBuilder = Widget Function(_AsyncManagerWidgetState amwidget,
+    OperationInfo info, AsyncManager manager);
 typedef AsyncManagerNotificationBuilder = Widget Function(
-    bool containsAchor, OperationInfo operationInfo);
+    bool containsAchor, OperationInfo operationInfo, AsyncManager manager);
 
 class AsyncManagerKey {
   final String key;
@@ -16,11 +17,27 @@ class AsyncManagerKey {
 /// Use this widget to define an AsyncManager
 /// and build a widget tree based on the current
 /// state of operations run inside that manager.
+///
+/// The defined async manager is not added to the global
+/// container and therefore can only be accessed
+/// from inside the [builder].
+///
+/// ##HINT:
+/// This widget is still under development and should
+/// only be used in non-sensitive environment.
 class AsyncManagerWidget extends StatefulWidget {
   final AsyncManagerBuilder builder;
   final AsyncManager manager;
 
-  AsyncManagerWidget({@required this.manager, @required this.builder});
+  /// Define if you want manually start the manager (false),
+  /// or if it should be run on initState (true).
+  /// To manually start, call [runOperation] on this widget.
+  final bool instantLoad;
+
+  AsyncManagerWidget(
+      {@required this.manager,
+      @required this.builder,
+      @required this.instantLoad});
 
   @override
   _AsyncManagerWidgetState createState() => _AsyncManagerWidgetState();
@@ -29,7 +46,7 @@ class AsyncManagerWidget extends StatefulWidget {
 class _AsyncManagerWidgetState extends State<AsyncManagerWidget> {
   @override
   Widget build(BuildContext context) {
-    return widget.builder(widget.manager.operationInfo);
+    return widget.builder(this, widget.manager.operationInfo, widget.manager);
   }
 
   @override
@@ -38,23 +55,30 @@ class _AsyncManagerWidgetState extends State<AsyncManagerWidget> {
 
     widget.manager.markAsInternal(true);
 
+    AsyncManager.registerAnchor(Anchor(
+        operationActionNotifier: (opac) {
+          if (!mounted) return;
+          setState(() {});
+        },
+        callback: (state) {},
+        callbackInstancesActive: (cia, ct) {
+          if (!mounted) return;
+          setState(() {});
+        },
+        child: widget,
+        operationNotifier: (opinfo) {
+          if (!mounted) return;
+          setState(() {});
+        }));
+
+    if (!widget.instantLoad) return;
+
+    runOperation();
+  }
+
+  void runOperation() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       widget.manager.runOperation();
-      AsyncManager.registerAnchor(Anchor(
-          operationActionNotifier: (opac) {
-            if (!mounted) return;
-            setState(() {});
-          },
-          callback: (state) {},
-          callbackInstancesActive: (cia, ct) {
-            if (!mounted) return;
-            setState(() {});
-          },
-          child: widget,
-          operationNotifier: (opinfo) {
-            if (!mounted) return;
-            setState(() {});
-          }));
     });
   }
 }
@@ -87,12 +111,13 @@ class AsyncNotificationWidget extends StatefulWidget {
 class _AsyncNotificationWidgetState extends State<AsyncNotificationWidget> {
   bool contains = false;
   OperationInfo _opInfo;
+  AsyncManager _manager;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        widget.child(contains, _opInfo),
+        widget.child(contains, _opInfo, _manager),
       ],
     );
   }
@@ -126,6 +151,7 @@ class _AsyncNotificationWidgetState extends State<AsyncNotificationWidget> {
           if (operation.hookKey.key == widget.hookKey.key) {
             contains = state;
             _opInfo = operation.operationInfo;
+            _manager = operation;
             return;
           }
         }
