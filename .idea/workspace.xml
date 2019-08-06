@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d740eeb4-a71b-4201-bc41-53aa7edec274" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/async_manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/async_manager.dart" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
@@ -18,13 +18,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/async_manager.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="187" column="28" selection-end-line="319" />
+            <state relative-caret-position="4845">
+              <caret line="323" lean-forward="true" selection-start-line="323" selection-end-line="323" />
               <folding>
-                <element signature="e#0#20#0" expanded="true" />
+                <element signature="e#24#44#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -42,14 +42,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/async_manager_widget.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2445">
-              <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
+            <state relative-caret-position="330">
+              <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
               <folding>
                 <element signature="e#11#54#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../../box/box_app_new/bbox/lib/helps/async_manager/async_manager.dart">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4710">
+              <caret line="320" lean-forward="true" selection-start-line="7" selection-end-line="320" />
             </state>
           </provider>
         </entry>
@@ -90,9 +99,9 @@
       <list>
         <option value="$PROJECT_DIR$/test/async_manager_test.dart" />
         <option value="$PROJECT_DIR$/lib/anchor.dart" />
-        <option value="$PROJECT_DIR$/lib/async_manager.dart" />
         <option value="$PROJECT_DIR$/example/lib/main.dart" />
         <option value="$PROJECT_DIR$/lib/async_manager_widget.dart" />
+        <option value="$PROJECT_DIR$/lib/async_manager.dart" />
       </list>
     </option>
   </component>
@@ -218,16 +227,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/async_manager.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="187" column="28" selection-end-line="319" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/anchor.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -254,10 +253,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/async_manager_widget.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2445">
-          <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
+        <state relative-caret-position="330">
+          <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
           <folding>
             <element signature="e#11#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../box/box_app_new/bbox/lib/helps/async_manager/async_manager.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4710">
+          <caret line="320" lean-forward="true" selection-start-line="7" selection-end-line="320" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/async_manager.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4845">
+          <caret line="323" lean-forward="true" selection-start-line="323" selection-end-line="323" />
+          <folding>
+            <element signature="e#24#44#0" expanded="true" />
           </folding>
         </state>
       </provider>

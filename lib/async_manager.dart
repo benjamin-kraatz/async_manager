@@ -298,7 +298,10 @@ class OperationAction {
   final AsyncManager asyncManager;
 
   OperationAction(
-      {this.description, this.targetPage, this.operation, this.asyncManager});
+      {this.description,
+      this.targetPage,
+      @required this.operation,
+      @required this.asyncManager});
 
   Future<OperationStateInfo> showOperationAction() {
     _runOperation();
