@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d740eeb4-a71b-4201-bc41-53aa7edec274" name="Default Changelist" comment="" />
+    <list default="true" id="d740eeb4-a71b-4201-bc41-53aa7edec274" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
     <ignored path="$PROJECT_DIR$/.idea/" />
     <ignored path="$PROJECT_DIR$/.pub/" />
@@ -28,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="331">
-              <caret line="81" column="26" selection-start-line="81" selection-start-column="26" selection-end-line="81" selection-end-column="26" />
+            <state relative-caret-position="225">
+              <caret line="156" column="31" selection-start-line="156" selection-start-column="31" selection-end-line="156" selection-end-column="31" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -40,11 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/async_manager_widget.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="48" column="31" selection-end-line="163" />
+            <state relative-caret-position="2445">
+              <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
               <folding>
                 <element signature="e#11#54#0" expanded="true" />
               </folding>
@@ -89,8 +91,8 @@
         <option value="$PROJECT_DIR$/test/async_manager_test.dart" />
         <option value="$PROJECT_DIR$/lib/anchor.dart" />
         <option value="$PROJECT_DIR$/lib/async_manager.dart" />
-        <option value="$PROJECT_DIR$/lib/async_manager_widget.dart" />
         <option value="$PROJECT_DIR$/example/lib/main.dart" />
+        <option value="$PROJECT_DIR$/lib/async_manager_widget.dart" />
       </list>
     </option>
   </component>
@@ -226,16 +228,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/async_manager_widget.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="48" column="31" selection-end-line="163" />
-          <folding>
-            <element signature="e#11#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/anchor.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -243,12 +235,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../../box/box_app_new/bbox/lib/helps/async_manager/async_manager_widget.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="426">
+          <caret line="163" lean-forward="true" selection-start-line="5" selection-end-line="163" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="81" column="26" selection-start-line="81" selection-start-column="26" selection-end-line="81" selection-end-column="26" />
+        <state relative-caret-position="225">
+          <caret line="156" column="31" selection-start-line="156" selection-start-column="31" selection-end-line="156" selection-end-column="31" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/async_manager_widget.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2445">
+          <caret line="163" lean-forward="true" selection-start-line="163" selection-end-line="163" />
+          <folding>
+            <element signature="e#11#54#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -59,7 +59,7 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                  'Here you can see if any operation is running, and information about'),
+                  'Here you can see if any operation is running, and information about it'),
             ),
             SizedBox(
               height: 12,
@@ -137,12 +137,16 @@ class _SettingsPageState extends State<SettingsPage> {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: ListView(
           children: <Widget>[
+            //This creates an async manager that can be listened to everywhere in the app.
             ListTile(
               title: Text('Remove all ads in this session'),
               subtitle: Text(
                   'Watch a video and remove all ads until you restart the app.'),
               onTap: _createAsyncManagerAdRemove,
             ),
+            //This creates an async manager that can only be seen inside this widget.
+            //based on the state of the operation, the builder can contain widgets
+            //that fit to the state.
             AsyncManagerWidget(
                 manager: _createAsyncManagerRefreshData(),
                 instantLoad: false,
@@ -186,7 +190,8 @@ class _SettingsPageState extends State<SettingsPage> {
               aman.notifyOperationInfo(
                 OperationInfo(
                   title: 'Here is your data',
-                  description: 'Here is your new dummy data.',
+                  description:
+                      'Here is your new dummy data. (click to refresh again)',
                 ),
               );
               return OperationInfo();
