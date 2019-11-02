@@ -123,7 +123,7 @@ class OperationInfo {
 /// stuff will never be called.
 ///
 /// Of course you can call another OperationAction inside an OperationAction
-/// through the AsyncManagers parameter in operation field.
+/// through the AsyncManager parameter in operation field.
 class AsyncManager {
   static Map<String, AsyncManager> instances;
   static List<Anchor> anchors;
@@ -187,7 +187,7 @@ class AsyncManager {
       //
       //action needed, maybe...
       //
-      _operationError(complete: false);
+      _operationError(complete: false, error: err);
     });
   }
 
@@ -210,12 +210,14 @@ class AsyncManager {
       print("ASYNCOP: Already completed.");
   }
 
-  void _operationError({bool complete = true}) {
+  void _operationError({bool complete = true, dynamic error}) {
     if (complete) {
       operationInfo.state = OperationState.Error;
       _removeInstance();
       _informAnchors(false);
-      if (!_completer.isCompleted)
+      if (!_completer.isCompleted) if (error != null)
+        _completer.completeError(error);
+      else
         _completer.completeError(OperationState.Error);
     }
   }

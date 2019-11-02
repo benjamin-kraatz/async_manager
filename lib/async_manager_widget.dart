@@ -2,6 +2,9 @@ import 'package:async_manager/anchor.dart';
 import 'package:async_manager/async_manager.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 typedef AsyncManagerBuilder = Widget Function(_AsyncManagerWidgetState amwidget,
     OperationInfo info, AsyncManager manager);
@@ -101,7 +104,7 @@ class AsyncNotificationWidget extends StatefulWidget {
   final AsyncManagerNotificationBuilder child;
   final AsyncManagerKey hookKey;
 
-  AsyncNotificationWidget({this.child, this.hookKey});
+  AsyncNotificationWidget({@required this.child, @required this.hookKey});
 
   @override
   _AsyncNotificationWidgetState createState() =>
@@ -132,12 +135,17 @@ class _AsyncNotificationWidgetState extends State<AsyncNotificationWidget> {
         _inform(state);
       });
     }, callbackInstancesActive: (state, count) {
-      _inform(state);
+      if (!mounted) return;
+      setState(() {
+        _inform(state);
+      });
     }, operationActionNotifier: (opaction) {
+      if (!mounted) return;
       setState(() {
         _inform(true);
       });
     }, operationNotifier: (opinfo) {
+      if (!mounted) return;
       setState(() {
         _inform(true);
       });
@@ -159,5 +167,144 @@ class _AsyncNotificationWidgetState extends State<AsyncNotificationWidget> {
       _opInfo = null;
       contains = false;
     }
+  }
+}
+
+/// Display all currently running async operations
+/// in an elegant way. This contains two buttons;
+/// info button on the left (customizable) and
+/// terminate button on the right.
+/// If any operation actions is available, is will
+/// be displayed also.
+class AsyncManagerOverview extends StatefulWidget {
+  final Function(AsyncManager manager) onInfoPressed;
+
+  AsyncManagerOverview({@required this.onInfoPressed});
+
+  @override
+  _AsyncManagerOverviewState createState() => _AsyncManagerOverviewState();
+}
+
+class _AsyncManagerOverviewState extends State<AsyncManagerOverview> {
+  @override
+  Widget build(BuildContext context) {
+    return AsyncManager.instances != null && AsyncManager.instances.length > 0
+        ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Center(
+                child: Column(
+                    children: <Widget>[]
+                      ..addAll([
+                        for (AsyncManager op in AsyncManager.instances.values)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(Icons.info),
+                                onPressed: () {
+                                  widget.onInfoPressed(op);
+                                },
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Text(op.operationInfo.title),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    op.operationInfo.description ?? '',
+                                    style: CupertinoTheme.of(context)
+                                        .textTheme
+                                        .tabLabelTextStyle,
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  op.operationActions == null ||
+                                          op.operationActions.length <= 0
+                                      ? Container()
+                                      : Builder(builder: (c) {
+                                          return Column(
+                                              children: []..addAll([
+                                                  for (OperationAction action
+                                                      in op.operationActions)
+                                                    Column(children: [
+                                                      SizedBox(height: 1),
+                                                      CupertinoButton.filled(
+                                                          child: Text(
+                                                              OperationAction
+                                                                  .title),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(32),
+                                                          onPressed: () async {
+                                                            await action
+                                                                .showOperationAction();
+                                                          }),
+                                                    ]),
+                                                ]));
+                                        }),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.clear,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  op.terminate();
+                                },
+                              ),
+                            ],
+                          )
+                      ])
+                      ..addAll([
+                        SizedBox(
+                          height: 2,
+                        ),
+                      ])
+                      ..addAll([
+                        SizedBox(
+                          height: 8,
+                        ),
+                        SizedBox(
+                          height: 2,
+                          child: LinearProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.blue),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                      ]))),
+          )
+        : Container();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AsyncManager.registerAnchor(Anchor(
+        child: widget,
+        callback: (state) {
+          if (!mounted) return;
+          setState(() {});
+        },
+        callbackInstancesActive: (state, count) {
+          if (!mounted) return;
+          setState(() {});
+        },
+        operationNotifier: (info) {
+          if (!mounted) return;
+          setState(() {});
+        },
+        operationActionNotifier: (action) {
+          if (!mounted) return;
+          setState(() {});
+        }));
   }
 }
