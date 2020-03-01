@@ -1,6 +1,6 @@
 name: async_manager
 description: Manage async operations all over the app, see Futures from one page running from another. Works on all platforms.
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/beagle-barks/async_manager
 
 environment:

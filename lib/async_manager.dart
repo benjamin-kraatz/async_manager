@@ -130,7 +130,6 @@ class AsyncManager {
   static OperationNotifier operationNotifier;
 
   final Operation operation;
-  @deprecated
   final AsyncManagerKey hookKey;
   OperationInfo operationInfo;
 
