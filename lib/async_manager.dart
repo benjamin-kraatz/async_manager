@@ -131,7 +131,6 @@ class AsyncManager {
 
   final Operation operation;
   @deprecated
-  final Widget sender;
   final AsyncManagerKey hookKey;
   OperationInfo operationInfo;
 
@@ -143,7 +142,6 @@ class AsyncManager {
   AsyncManager(
       {@required this.operation,
       @required this.operationInfo,
-      @deprecated this.sender,
       @required this.hookKey}) {
     _randomGen = Random();
     _richKey = _randomGen.nextInt(120000).toString() + this.toString();

@@ -4,7 +4,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 typedef AsyncManagerBuilder = Widget Function(_AsyncManagerWidgetState amwidget,
     OperationInfo info, AsyncManager manager);
